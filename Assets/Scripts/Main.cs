@@ -26,6 +26,7 @@ public class Main : MonoBehaviour {
 
             yield return webRequest.SendWebRequest();
 
+            // Comprobamos resultado de la petición
             switch (webRequest.result) {
                 case UnityWebRequest.Result.Success:
                     VerImagen(webRequest.downloadHandler.text);                    
@@ -45,27 +46,33 @@ public class Main : MonoBehaviour {
 
     }
 
+    /**
+    Método que extrae la petición en formato json
+    y escoge al azar el enlace de una de las  imágenes obtenidas
+    */
     private void VerImagen(string jsonText) {
         // Extraer Json
         listaCamaras = JsonUtility.FromJson<ListaCamaras>(jsonText);
 
         if (listaCamaras.listaCamaras.Count > 0) {
 
-        int imagenEscogida = Random.Range(0, listaCamaras.listaCamaras.Count);
+            int imagenEscogida = Random.Range(0, listaCamaras.listaCamaras.Count);
 
-        StartCoroutine(LoadImage(listaCamaras.listaCamaras[imagenEscogida].imaxeCamara));
+            StartCoroutine(LoadImage(listaCamaras.listaCamaras[imagenEscogida].imaxeCamara));
 
         }
     }
 
+    /**
+    Método que solicita la imagen escogida y la carga en el gameobject
+    */
     private IEnumerator LoadImage(string uri) {
 
         WWW www= new WWW(uri);
         yield return www;
-
-        //Renderer renderer = GetComponent<Renderer>();
-        imagen.texture = www.texture;
         
+        imagen.texture = www.texture;
+                
     }
 
 }
